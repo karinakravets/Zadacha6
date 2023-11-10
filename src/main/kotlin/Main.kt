@@ -1,7 +1,8 @@
 import kotlin.random.Random
+
 class Train(var capacity: Int, var direction: String) {
     fun sendTrain() {
-        println("Поезд $direction, состоящий из $capacity вагонов отправлен")
+        println("Поезд $direction, состоящий из $capacity вагонов отправлен ")
         for (i in 1..capacity) {
             val wagonCapacity = Random.nextInt(10, 51)
             val passengers = Random.nextInt(0, wagonCapacity + 1)
@@ -24,7 +25,6 @@ class DirectionCreator(val cities: List<String>) {
         while (city2 == city1) {
             city2 = cities.random()
         }
-
         println("Направление создано: $city1 - $city2")
     }
 }
@@ -37,7 +37,6 @@ fun main() {
     var exit = false
     var trainCreated = false
     var train: Train? = null
-
     while (!exit) {
         println("Выберите действие:")
         println("1. Создать направление")
@@ -45,7 +44,6 @@ fun main() {
         println("3. Сформировать поезд")
         println("4. Отправить поезд")
         println("EXIT. Закончить работу")
-
         val choice = readLine()
         when (choice) {
             "1" -> directionCreator.createDirection()
@@ -62,7 +60,9 @@ fun main() {
             }
             "4" -> {
                 if (trainCreated) {
-                    train?.direction = readLine() ?: ""
+                    println("Введите направление поезда:")
+                    val trainDirection = readLine() ?: ""
+                    train?.direction = trainDirection
                     train?.sendTrain()
                     trainCreated = false
                 } else {
