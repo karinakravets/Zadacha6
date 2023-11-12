@@ -1,12 +1,10 @@
 import kotlin.random.Random
-
-
 data class Wagon(val capacity: Int, val passengers: Int)
 
 val cities = listOf( "Кемерово", "Санкт-Петербург", "Новосибирск", "Москва", "Сочи",
-    "Казань", "Челябинск", "Омск", "Самара", "Ростов-на-Дону",
+    "Казань", "Челябинск", "Омск", "Адлер", "Ростов-на-Дону",
     "Уфа", "Красноярск", "Пермь", "Воронеж", "Волгоград")
-
+var exit = false
 fun main() {
     while (true) {
         println("\nВыберите действие:")
@@ -14,7 +12,7 @@ fun main() {
         println("2. Продать билеты")
         println("3. Сформировать поезд")
         println("4. Отправить поезд")
-        println("Введите 'EXIT' для выхода из программы")
+        println("Введите 'exit' для выхода из программы")
 
         val choice = readLine()
 
@@ -23,7 +21,8 @@ fun main() {
             "2" -> sellTickets()
             "3" -> formTrain()
             "4" -> sendTrain()
-            "EXIT" -> {
+            "exit" -> {
+                exit= true
                 println("Работа программы завершена.")
                 return
             }
