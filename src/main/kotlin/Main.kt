@@ -1,76 +1,103 @@
 import kotlin.random.Random
 
-class Train(var capacity: Int, var direction: String) {
-    fun sendTrain() {
-        println("Поезд $direction, состоящий из $capacity вагонов отправлен ")
-        for (i in 1..capacity) {
-            val wagonCapacity = Random.nextInt(10, 51)
-            val passengers = Random.nextInt(0, wagonCapacity + 1)
-            println("Вагон $i: Вместимость - $wagonCapacity, Пассажиров - $passengers")
-        }
-    }
-}
 
-class TicketSeller {
-    fun sellTickets() {
-        val passengerCount = Random.nextInt(5, 202)
-        println("Продано билетов: $passengerCount")
-    }
-}
+data class Wagon(val capacity: Int, val passengers: Int)
 
-class DirectionCreator(val cities: List<String>) {
-    fun createDirection() {
-        val city1 = cities.random()
-        var city2 = cities.random()
-        while (city2 == city1) {
-            city2 = cities.random()
-        }
-        println("Направление создано: $city1 - $city2")
-    }
-}
+val cities = listOf( "Кемерово", "Санкт-Петербург", "Новосибирск", "Москва", "Сочи",
+    "Казань", "Челябинск", "Омск", "Самара", "Ростов-на-Дону",
+    "Уфа", "Красноярск", "Пермь", "Воронеж", "Волгоград")
 
 fun main() {
-    val cities = listOf("Бийск", "Барнаул", "Новосибирск", "Омск", "Томск", "Кемерово", "Ангарск",
-        "Красноярск", "Иркутск", "Улан-Удэ", "Чита", "Хабаровск", "Владивосток", "Сургут", "Тюмень")
-    val ticketSeller = TicketSeller()
-    val directionCreator = DirectionCreator(cities)
-    var exit = false
-    var trainCreated = false
-    var train: Train? = null
-    while (!exit) {
-        println("Выберите действие:")
+    println("Добро пожаловать в программу по составлению плана поезда!")
+
+    while (true) {
+        println("\nВыберите действие:")
         println("1. Создать направление")
         println("2. Продать билеты")
         println("3. Сформировать поезд")
         println("4. Отправить поезд")
-        println("EXIT. Закончить работу")
+        println("Введите 'EXIT' для выхода из программы")
+
         val choice = readLine()
+
         when (choice) {
-            "1" -> directionCreator.createDirection()
-            "2" -> ticketSeller.sellTickets()
-            "3" -> {
-                if (!trainCreated) {
-                    val capacity = Random.nextInt(5, 26)
-                    train = Train(capacity, "")
-                    println("Создан поезд с вместимостью вагонов: $capacity")
-                    trainCreated = true
-                } else {
-                    println("Поезд уже сформирован")
-                }
+            "1" -> createDirection()
+            "2" -> sellTickets()
+            "3" -> formTrain()
+            "4" -> sendTrain()
+            "EXIT" -> {
+                println("Работа программы завершена.")
+                return
             }
-            "4" -> {
-                if (trainCreated) {
-                    println("Введите направление поезда:")
-                    val trainDirection = readLine() ?: ""
-                    train?.direction = trainDirection
-                    train?.sendTrain()
-                    trainCreated = false
-                } else {
-                    println("Сначала сформируйте поезд")
-                }
-            }
-            "EXIT" -> exit = true
-            else -> println("Неправильный выбор. Попробуйте снова.")
+            else -> println("Некорректный ввод. Пожалуйста, повторите попытку.")
         }
     }
+}
+
+var direction: String? = null
+var wagons: MutableList<Wagon>? = null
+val passengersTickets = mutableListOf<Int>()
+
+fun createDirection() {
+    val City1 = cities[Random.nextInt(cities.size)]
+    var City2: String
+
+    do {
+        City2 = cities[Random.nextInt(cities.size)]
+    } while (City1 == City2)
+
+    direction = "$City1 - $City2"
+    println("Направление создано: $direction")
+}
+
+fun sellTickets() {
+    if (direction.isNullOrEmpty()) {
+        println("Сначала создайте направление.")
+        return
+    }
+
+    val passengersCount = Random.nextInt(5, 202)
+    passengersTickets.clear()
+
+    for (i in 1..passengersCount) {
+        passengersTickets.add(i)
+    }
+
+    println("Продано $passengersCount билетов на направление $direction")
+}
+
+fun formTrain() {
+    if (passengersTickets.isEmpty()) {
+        println("Сначала продайте билеты.")
+        return
+    }
+
+    wagons = mutableListOf()
+    var remainingPassengers = passengersTickets.size
+
+    while (remainingPassengers > 0) {
+        val wagonCapacity = Random.nextInt(5, 26)
+        val passengersInWagon = if (wagonCapacity < remainingPassengers) wagonCapacity else remainingPassengers
+
+        wagons?.add(Wagon(wagonCapacity, passengersInWagon))
+        remainingPassengers -= passengersInWagon
+    }
+
+    println("Поезд успешно сформирован.")
+}
+
+fun sendTrain() {
+    if (wagons.isNullOrEmpty()) {
+        println("Сначала сформируйте поезд.")
+        return
+    }
+
+    println("Поезд $direction, состоящий из ${wagons!!.size} вагонов, отправлен.")
+
+    for ((index, wagon) in wagons!!.withIndex()) {
+        println("Вагон ${index + 1}: Вместимость - ${wagon.capacity}, Пассажиры - ${wagon.passengers}")
+    }
+
+    direction = null
+    wagons = null
 }
