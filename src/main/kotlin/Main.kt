@@ -40,7 +40,7 @@ fun createDirection() {
     var City2 = cities[Random.nextInt(cities.size)]
     while (City1 == City2) {
         City2 = cities[Random.nextInt(cities.size)]
-    } 
+    }
     direction = "$City1 - $City2"
     println("Направление создано: $direction")
 }
@@ -52,7 +52,7 @@ fun sellTickets() {
     }
 
     val passengersCount = Random.nextInt(5, 202)
-  
+
 
     for (i in 1..passengersCount) {
         passengersTickets.add(i)
