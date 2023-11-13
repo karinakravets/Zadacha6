@@ -37,12 +37,10 @@ val passengersTickets = mutableListOf<Int>()
 
 fun createDirection() {
     val City1 = cities[Random.nextInt(cities.size)]
-    var City2: String
-
-    do {
+    var City2 = cities[Random.nextInt(cities.size)]
+    while (City1 == City2) {
         City2 = cities[Random.nextInt(cities.size)]
-    } while (City1 == City2)
-
+    } 
     direction = "$City1 - $City2"
     println("Направление создано: $direction")
 }
@@ -54,7 +52,7 @@ fun sellTickets() {
     }
 
     val passengersCount = Random.nextInt(5, 202)
-    passengersTickets.clear()
+  
 
     for (i in 1..passengersCount) {
         passengersTickets.add(i)
